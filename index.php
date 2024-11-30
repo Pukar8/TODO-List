@@ -41,7 +41,7 @@ padding: 10px;
 border: 2px  solid#6b8e24 ;
 
 }
-input[type=submit]{
+input[name=submit]{
   
 height:40px;
 padding: 10px;
@@ -74,10 +74,9 @@ tr:hover{
 .task-to-do{
     text-align: left;
 }
-.delete{
+
+input [name=delete]{
     text-align :center;
-}
-.delete a{
     color:white;
     background-color: #a52a2a;
     padding: 1px 6px;
@@ -103,13 +102,16 @@ tr:hover{
 </tr>
 <?php
 $t=mysqli_query($conn,"SELECT * FROM tasks");
+$i=1;
        while($row=mysqli_fetch_array($t)){
 
        ?>
 <tr>
-    <td><?php echo $row['ID']; ?></td>
+    <td><?php echo $i; $i++; ?></td>
     <td class="task-to-do"><?php echo $row['Task']; ?> </td>
-    <td class="delete"><a href="#">x</a></td>
+    <td class="delete"><form method="Post" action=""><input type="text" name="id" hidden value="<?=$row['ID']?>">
+<input type="submit" name="delete" value="delete" >
+</form></td>
 </tr>
 <?php
             }
@@ -118,3 +120,14 @@ $t=mysqli_query($conn,"SELECT * FROM tasks");
 </table>
 <body>
 </html>
+<?php
+if(isset($_POST['delete'])){
+    $id=$_POST['id'];
+    $delete="Delete from tasks where ID='$id'";
+    if(mysqli_query($conn,$delete)){
+echo"Successfully deleted";
+    }
+    else{
+        echo"error";
+    }
+}
